@@ -1,0 +1,263 @@
+﻿<Window x:Class="EACharge_Out.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EACharge_Out"
+        xmlns:wpfTool="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+        mc:Ignorable="d"
+        Title="МикроСРЗ" 
+        Height="473.828" 
+        Width="993.017"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize">
+    <Window.Resources>
+        <local:UintToBaudRateConverter x:Key="BaudConverter"/>
+        <local:UintToParityConverter x:Key="ParityConverter"/>
+        <Style TargetType="TextBox">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="TextWrapping" Value="NoWrap"/>
+            <EventSetter Event="LostFocus" Handler="LastFocusedTextBox_LostFocus"/>
+        </Style>
+        <Style TargetType="ComboBox">
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="160"/>
+        </Style>
+    </Window.Resources>
+    <Grid Name="MainGrid">
+        <StackPanel>
+            <Menu>
+                <MenuItem Header="Меню">
+                    <MenuItem x:Name="menuItemSettings" 
+                          Header="Настройки соединения" 
+                          Click="MenuItemSettings_Click"/>
+                    <Separator/>
+                    <MenuItem   Name="menuItemExit"
+                                Header="Выход" 
+                                Click="MenuItemExit_Click"/>
+                </MenuItem>
+            </Menu>
+            <TabControl Name="tabControl" >
+                <TabItem Header="Настроечные параметры">
+                    <Grid x:Name="MyGrid1">
+                        <TextBlock Text="Уставка предварительной тревоги (кОм)"                                
+                               Margin="46,26,0,0"                                        
+                               Height="34" 
+                               Width="143"/>
+                        <TextBlock Text="Уставка тревоги (кОм)"                                
+                               Margin="46,89,455,0"                                
+                               Height="23" 
+                               Width="132"/>
+                        <TextBlock Text="Адрес устройства"                               
+                               Margin="46,159,0,0"                                
+                               Height="23" 
+                               Width="104"/>
+                        <TextBlock Text="Скорость обмена(baudrate)"                              
+                               Margin="46,218,0,0"                               
+                               Height="35" 
+                               Width="132"/>
+                        <TextBlock Text="Четность"                                
+                               Margin="46,292,0,0"                                
+                               Height="25" 
+                               Width="59"/>
+                        <TextBlock Text="Задержка"                                
+                               Margin="396,26,0,0"                              
+                               Height="23" 
+                               Width="64"/>
+                        <TextBlock Text="Имя устройства"                                
+                               Margin="396,89,0,0"                                
+                               Height="23" 
+                               Width="101"/>
+                        <TextBlock Text="Идентификационный номер"                                
+                               Margin="396,159,0,0"                                 
+                               Height="38" 
+                               Width="132"/>
+                        <TextBlock Text="Номер версии прошивки"                               
+                               Margin="396,218,0,0"                                
+                               Height="35" 
+                               Width="85"/>
+                        <TextBox   x:Name="txtbxPreAlarm"                                                              
+                               Margin="199,26,0,0"                                
+                               Text="{Binding Registers[7].Value}"
+                               PreviewTextInput="NumberValidationTextBox"/>
+                        <TextBox   x:Name="txtbxAlarm"                                
+                               Margin="199,89,0,0"                               
+                               Text="{Binding Registers[8].Value}"
+                               PreviewTextInput="NumberValidationTextBox"/>
+                        <TextBox   x:Name="txtbxAddress"                               
+                               Margin="199,159,0,0"                                 
+                               Text="{Binding Registers[9].Value}"
+                               PreviewTextInput="NumberValidationTextBox"/>
+                        <ComboBox x:Name="cmbbxBaudRate"                              
+                              Margin="199,230,0,0"                               
+                              Text="{Binding Registers[10].Value, Converter={StaticResource BaudConverter}}" LostFocus="CmbbxBaudRate_LostFocus">
+                            <ComboBoxItem Content="1.2k"/>
+                            <ComboBoxItem Content="2.4k"/>
+                            <ComboBoxItem Content="4.8k"/>
+                            <ComboBoxItem Content="9.6k"/>
+                            <ComboBoxItem Content="19.2k"/>
+                            <ComboBoxItem Content="38.4k"/>
+                            <ComboBoxItem Content="57.6k"/>
+                            <ComboBoxItem Content="115.2k"/>
+                        </ComboBox>
+                        <ComboBox x:Name="cmbbxParity"                              
+                              Margin="199,292,0,0"                               
+                              Text="{Binding Registers[11].Value, Converter={StaticResource ParityConverter}}" LostFocus="CmbbxParity_LostFocus">
+                            <ComboBoxItem Content="8N1"/>
+                            <ComboBoxItem Content="8O1"/>
+                            <ComboBoxItem Content="8E1"/>
+                            <ComboBoxItem Content="8N2"/>
+                        </ComboBox>
+                        <TextBox   x:Name="txtbxDelay"                               
+                               Margin="580,26,0,0"                                 
+                               Text="{Binding Registers[12].Value}"
+                               PreviewTextInput="NumberValidationTextBox"/>
+                        <TextBox   x:Name="txtbxDeviceName"                                 
+                               Margin="580,89,0,0"                                 
+                               Text="{Binding Registers[13].Value}"
+                               IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxID"                                
+                               Margin="580,159,0,0"                                 
+                               Text="{Binding Registers[14].Value}"
+                               IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxFirmwareVersion"                              
+                               Margin="580,218,0,0"                                
+                               Text="{Binding Registers[15].Value}"
+                               IsReadOnly="True"    />
+                        <Button    x:Name="btnReadAllSettingRegisters"
+                               Content="Прочитать все регистры"
+                               Margin="756,26,51,310" 
+                               Click="BtnReadAllSettingRegisters_Click"/>
+                        <Button    x:Name="btnReadOneSettingRegister"
+                               Content="Прочитать один регистр"
+                               Margin="756,74,51,262" 
+                               Click="BtnReadOneSettingRegister_Click" 
+                               />
+                        <Button    x:Name="btnWriteOneSettingRegister"
+                               Content="Записать один регистр"
+                               Margin="756,119,51,217" 
+                               Click="BtnWriteOneSettingRegister_Click" 
+                               />
+                        <Button    x:Name="btnSearchOfDevice"
+                               Content="Найти устройство"
+                               Margin="756,167,51,169" 
+                               Click="BtnSearchOfDevice_Click"                                 
+                               />
+                        <Button    x:Name="btnReset"
+                               Content="Перезагрузить устройство"
+                               Margin="756,215,51,121" 
+                               Click="BtnReset_Click"  
+                               />
+                        <Button    x:Name="btnFactorySetting"
+                               Content="Заводские настройки"
+                               Margin="756,261,51,75" Click="BtnFactorySetting_Click"                                  
+                               />
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Измерения">
+                    <Grid x:Name="MyGrid2">
+                        <TextBlock Text="Сопротивление сети (кОм)"                                
+                               Margin="46,26,0,0"                                
+                               Height="34" 
+                               Width="143"/>
+                        <TextBlock Text="Напряжение (В)"                              
+                               Margin="46,89,455,0"                                 
+                               Height="23" 
+                               Width="132"/>
+                        <TextBlock Text="Емкость сети (мкФ)"                               
+                               Margin="46,159,455,0"                                
+                               Height="23" 
+                               Width="132"/>
+                        <TextBlock Text="Напряжение U+ (В)"                              
+                               Margin="46,218,0,0"                                 
+                               Height="23" 
+                               Width="115"/>
+                        <TextBlock Text="Напряжение U- (В)"                               
+                               Margin="396,26,0,0"                                
+                               Height="23" 
+                               Width="110"/>
+                        <TextBlock Text="Сопротивление R+ (кОм)"                              
+                               Margin="396,89,0,0"                                 
+                               Height="23" 
+                               Width="145"/>
+                        <TextBlock Text="Сопротивление R- (кОм)"                               
+                               Margin="396,159,0,0"                                 
+                               Height="25" 
+                               Width="145"/>
+                        <TextBox   x:Name="txtbxResistance"                               
+                               Margin="199,26,0,0"                                 
+                               Text="{Binding Registers[0].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxVoltage"                               
+                               Margin="199,89,0,0"                                
+                               Text="{Binding Registers[1].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxCapacitance"                                 
+                               Margin="199,159,0,0"                                 
+                               Text="{Binding Registers[2].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxVoltagePlus"                               
+                               Margin="199,218,0,0"                                 
+                               Text="{Binding Registers[3].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxVoltageMinus"                                
+                               Margin="580,26,0,0"                                 
+                               Text="{Binding Registers[4].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxResistancePlus"                                
+                               Margin="580,89,0,0"                                 
+                               Text="{Binding Registers[5].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <TextBox   x:Name="txtbxResistanceMinus"                                
+                               Margin="580,159,0,0"                                 
+                               Text="{Binding Registers[6].Value, StringFormat={}{0:F1}}"
+                                   IsReadOnly="True"/>
+                        <Button    x:Name="btnReadAllMeasuringRegisters"
+                               Content="Прочитать все регистры"
+                               Margin="756,26,51,310" 
+                               Click="BtnReadAllMeasuringRegisters_Click" 
+                               />
+                        <Button    x:Name="btnReadOneMeasuringRegister"
+                               Content="Прочитать один регистр"
+                               Margin="756,74,51,262" 
+                              Click="BtnReadOneMeasuringRegister_Click" 
+                                
+                               />
+                        <Button    x:Name="btnStartStopPoll"
+                            Content="Начать опрос"
+                            Margin="756,119,51,217" Click="BtnStartStopPoll_Click" 
+                                   
+                                
+                               />
+                        <TextBlock Text="Интервал опроса, мс :"                               
+                            Margin="763,157,0,0"                                 
+                            Height="25" 
+                            Width="145"/>
+                        <wpfTool:IntegerUpDown Name="numUpDownInterval"
+                                               Margin="763,191,143,138"
+                                               Text="500"
+                                               TextAlignment="Center"/>
+
+
+
+
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <TextBlock x:Name="txtblckStatus"
+                       Text="{Binding Info}"
+                       Margin="50,7,0,0"                       
+                       />
+
+        </StackPanel>
+    </Grid>
+</Window>
